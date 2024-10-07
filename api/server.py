@@ -16,16 +16,16 @@ class Documento(BaseModel):
     temp: str  # string
 
 @app.get("/documentos")
-async def ler_documentos():
+async def lerDocumentos():
     documentos = []
-    cursor = collection.find({})
+    cursor = collection.find({}) # le com o .find do collection
     for documento in cursor:
         documento['_id'] = str(documento['_id'])  
         documentos.append(documento)
     return {"documentos": documentos}
 
 @app.post("/documentos")
-async def inserir_documento(documento: Documento):
-    novo_documento = documento.dict()  # Converte o modelo para dicionário
-    resultado = collection.insert_one(novo_documento)
+async def inserirDocumentos(documento: Documento):
+    novo_documento = documento.dict()  # converte o modelo para dicionário
+    resultado = collection.insert_one(novo_documento) # e aqui ele pega o documento e manda pro DB com o insert_one
     return {"message": "Documento inserido", "id": str(resultado.inserted_id)}
