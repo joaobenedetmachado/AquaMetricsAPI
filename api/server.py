@@ -1,6 +1,6 @@
 from fastapi import FastAPI
-from pymongo import MongoClient
 from pydantic import BaseModel
+from pymongo import MongoClient
 
 minhaSenha = '123'
 client = MongoClient(f"mongodb+srv://joaoteste:{minhaSenha}@iotcluster.a70ey.mongodb.net/?retryWrites=true&w=majority&appName=IotCluster")
@@ -11,9 +11,9 @@ app = FastAPI()
 
 class Documento(BaseModel):
     data: str
-    ph: str
-    tds: str
-    temp: str
+    ph: str  # string
+    tds: str  # string
+    temp: str  # string
 
 @app.get("/documentos")
 async def ler_documentos():
@@ -26,11 +26,6 @@ async def ler_documentos():
 
 @app.post("/documentos")
 async def inserir_documento(documento: Documento):
-    novo_documento = {
-        "data": documento.data,
-        "ph": documento.ph,
-        "tds": documento.tds,
-        "temp": documento.temp
-    }
+    novo_documento = documento.dict()  # Converte o modelo para dicionário
     resultado = collection.insert_one(novo_documento)
     return {"message": "Documento inserido", "id": str(resultado.inserted_id)}
