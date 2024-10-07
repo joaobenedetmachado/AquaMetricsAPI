@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from pymongo import MongoClient
 
@@ -9,13 +10,21 @@ collection = db["aquacollections"]
 
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Permite requisições de qualquer origem
+    allow_credentials=True,
+    allow_methods=["*"],  # Permite todos os métodos (GET, POST, etc.)
+    allow_headers=["*"],  # Permite todos os cabeçalhos
+)
+
 class Documento(BaseModel):
     data: str
     ph: str  # string
     tds: str  # string
     temp: str  # string
 
-@app.get("/documentos")
+@app.get("/documentos") # quando a rota for um get, ele faz isso:
 async def lerDocumentos():
     documentos = []
     cursor = collection.find({}) # le com o .find do collection
@@ -24,7 +33,7 @@ async def lerDocumentos():
         documentos.append(documento)
     return {"documentos": documentos}
 
-@app.post("/documentos")
+@app.post("/documentos") # quando a rota for um post, faz isso:
 async def inserirDocumentos(documento: Documento):
     novo_documento = documento.dict()  # converte o modelo para dicionário
     resultado = collection.insert_one(novo_documento) # e aqui ele pega o documento e manda pro DB com o insert_one
