@@ -41,7 +41,7 @@ async def inserirDocumentos(documento: Documento):
 
 @app.get("/documentos/ultimo")
 async def lerUltimoDocumento():
-    ultimo_documento = collection.find_one(sort=[('_id', -1)])  # Ordena por _id decrescente e pega o último
+    ultimo_documento = collection.find_one(sort=[('_id', -1)])  # ordena por _id decrescente e pega o ultimo
     if ultimo_documento:
         ultimo_documento['_id'] = str(ultimo_documento['_id'])
     return {"documento": ultimo_documento}
