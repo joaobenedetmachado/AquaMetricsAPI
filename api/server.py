@@ -38,3 +38,10 @@ async def inserirDocumentos(documento: Documento):
     novo_documento = documento.dict()  # converte o modelo para dicionário
     resultado = collection.insert_one(novo_documento) # e aqui ele pega o documento e manda pro DB com o insert_one
     return {"message": "Documento inserido", "id": str(resultado.inserted_id)}
+
+@app.get("/documentos/ultimo")
+async def lerUltimoDocumento():
+    ultimo_documento = collection.find_one(sort=[('_id', -1)])  # Ordena por _id decrescente e pega o último
+    if ultimo_documento:
+        ultimo_documento['_id'] = str(ultimo_documento['_id'])
+    return {"documento": ultimo_documento}
