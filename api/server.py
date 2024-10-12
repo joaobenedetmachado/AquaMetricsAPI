@@ -20,9 +20,9 @@ app.add_middleware(
 
 class Documento(BaseModel):
     data: str
-    ph: int  # string
-    tds: int # string
-    temp: int  # string
+    ph: float  # string
+    tds: float # string
+    temp: float  # string
 
 @app.get("/documentos") # quando a rota for um get, ele faz isso:
 async def lerDocumentos():
